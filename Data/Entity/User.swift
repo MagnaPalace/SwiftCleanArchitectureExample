@@ -7,6 +7,16 @@
 
 import Foundation
 
+struct UsersResponse: Decodable {
+    let users: [User]
+}
+
+struct UserResponse: Decodable {
+    let user_id: String
+    let name: String
+    let comment: String
+}
+
 // ビジネスロジックにおける重要なオブジェクトを表現するためのクラスや構造体
 struct User: Codable {
     

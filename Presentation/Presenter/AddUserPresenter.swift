@@ -8,7 +8,7 @@
 import Foundation
 
 protocol AddUserPresenter {
-    func addUserButtonTapped(userId: String?, name: String?, comment: String?)
+    func addUserButtonTapped(userId: String, name: String, comment: String)
 }
 
 class AddUserPresenterImpl: AddUserPresenter {
@@ -16,28 +16,27 @@ class AddUserPresenterImpl: AddUserPresenter {
     private let useCase: UserUseCase
     var viewController: AddUserViewControllerInput?
 
-    init(useCase: UserUseCase) {
+    init(useCase: UserUseCase, viewController: AddUserViewControllerInput) {
         self.useCase = useCase
+        self.viewController = viewController
     }
     
-    func addUserButtonTapped(userId: String?, name: String?, comment: String?) {
-        guard userId?.count ?? 0 > 0, name?.count ?? 0 > 0, comment?.count ?? 0 > 0 else {
+    func addUserButtonTapped(userId: String, name: String, comment: String) {
+        guard userId.count > 0, name.count > 0, comment.count > 0 else {
             self.viewController?.showNotCompletedInputFieldAlert()
             return
         }
         self.viewController?.startIndicator()
-        Task {
-            do {
-                let user = try await useCase.addUser(userId: userId!, name: name!, comment: comment!)
-                DispatchQueue.main.async {
-                    self.viewController?.returnToUserListView()
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.viewController?.showAddUserApiFailedAlert()
-                }
+        
+        self.useCase.addUser(userId: userId, name: name, comment: comment) { [weak self] result in
+            switch result {
+            case .success(let user):
+                self?.viewController?.returnToUserListView()
+            case .failure(let error):
+                self?.viewController?.showAddUserApiFailedAlert()
             }
-            self.viewController?.stopIndicator()
         }
+        
+        self.viewController?.stopIndicator()
     }
 }

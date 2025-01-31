@@ -51,7 +51,7 @@ class UserListViewController: UIViewController {
         let dataStore = UserDataStoreImpl()
         let repository = UserRepositoryImpl(dataStore: dataStore)
         let useCase = UserUseCaseImpl(repository: repository)
-        let presenter = AddUserPresenterImpl(useCase: useCase)
+        let presenter = AddUserPresenterImpl(useCase: useCase, viewController: addUserViewController)
         
         addUserViewController.inject(presenter: presenter)
         navigationController?.pushViewController(addUserViewController, animated: true)

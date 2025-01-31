@@ -26,19 +26,17 @@ class UserListPresenterImpl: UserListPresenter {
     
     func fetchUsers() {
         self.viewController?.startIndicator()
-        Task {
-            do {
-                let users = try await useCase.fetchUsers()
-                DispatchQueue.main.async {
-                    self.viewController?.setTableView(users: users)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.viewController?.showFetchUsersApiFailedAlert()
-                }
+
+        self.useCase.fetchUsers { [weak self] result in
+            switch result {
+            case .success(let users):
+                self?.viewController?.setTableView(users: users)
+            case .failure(let error):
+                self?.viewController?.showFetchUsersApiFailedAlert()
             }
-            self.viewController?.stopIndicator()
         }
+        
+        self.viewController?.stopIndicator()
     }
 
 }

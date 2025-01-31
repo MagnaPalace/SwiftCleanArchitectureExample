@@ -9,8 +9,8 @@ import Foundation
 
 // アプリケーションのビジネスルールを表現するためのクラスや構造体
 protocol UserUseCase {
-    func fetchUsers() async throws -> [User]
-    func addUser(userId: String, name: String, comment: String) async throws -> User
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void)
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 class UserUseCaseImpl: UserUseCase {
@@ -20,11 +20,11 @@ class UserUseCaseImpl: UserUseCase {
         self.repository = repository
     }
 
-    func fetchUsers() async throws -> [User] {
-        return try await self.repository.fetchUsers()
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
+        self.repository.fetchUsers(completion: completion)
     }
     
-    func addUser(userId: String, name: String, comment: String) async throws -> User {
-        return try await self.repository.addUser(userId: userId, name: name, comment: comment)
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {
+        self.repository.addUser(userId: userId, name: name, comment: comment, completion: completion)
     }
 }

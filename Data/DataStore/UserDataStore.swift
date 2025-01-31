@@ -6,55 +6,59 @@
 //
 
 import Foundation
+import Alamofire
 
 protocol UserDataStore {
-    func fetchUsers() async throws -> [User]
-    func addUser(userId: String, name: String, comment: String) async throws -> User
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void)
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 class UserDataStoreImpl: UserDataStore {
     
-    func fetchUsers() async throws -> [User] {
-        let api = ApiManager()
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
         let url = URL(string: BASE_URL + API_URL + UserApi.all.rawValue)!
-
-        let jsonObject = try await api.requestAsync(param: nil, url: url)
+        print("-----url-----\n\(url)")
         
-        // 辞書型にキャスト
-        guard let jsonDict = jsonObject as? [String: Any], let usersArray = jsonDict["users"] as? [[String: Any]] else {
-            throw NSError(domain: "DecodingError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
-        }
-        // usersArrayをJSONDecoderを使ってデコード
-        let jsonData = try JSONSerialization.data(withJSONObject: usersArray, options: [])
-        
-        // JSONデータをデコードしてUser配列に変換
-        let decoder = JSONDecoder()
-        let users = try decoder.decode([User].self, from: jsonData)
-        return users
+//        AF.request(url, method: .get) // GET可能な時
+        AF.request(url, method: .post, parameters: nil, encoding: JSONEncoding.default)
+            .validate(statusCode: 200..<300) // 200番台のステータスコードを期待
+            .responseDecodable(of: UsersResponse.self) { response in
+//                print(response)
+                switch response.result {
+                case .success(let usersResponse):
+                    print(usersResponse)
+                    completion(.success(usersResponse.users))
+                case .failure(let error):
+                    print("Error: \(error)")
+                    completion(.failure(error))
+                }
+            }
     }
 
-    func addUser(userId: String, name: String, comment: String) async throws -> User {
-        let api = ApiManager()
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {
         let url = URL(string: BASE_URL + API_URL + UserApi.store.rawValue)!
-
+        print("-----url-----\n\(url)")
+        
         let parameter = [
             User.Key.userId.rawValue: userId,
             User.Key.name.rawValue: name,
             User.Key.comment.rawValue: comment,
         ]
+        print("-----parameter-----\n\(String(describing: parameter))")
         
-        let jsonObject = try await api.requestAsync(param: parameter, url: url)
-        
-        // 辞書型にキャスト
-        guard let jsonDict = jsonObject as? [String: Any] else {
-            throw NSError(domain: "DecodingError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
-        }
-        
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonDict, options: [])
-        
-        // JSONデータをデコードしてUserモデルに変換
-        let decoder = JSONDecoder()
-        let user = try decoder.decode(User.self, from: jsonData)
-        return user
+        AF.request(url, method: .post, parameters: parameter, encoding: JSONEncoding.default)
+            .validate(statusCode: 200..<300) // 200番台のステータスコードを期待
+            .responseDecodable(of: UserResponse.self) { response in
+//              print(response)
+                switch response.result {
+                case .success(let userResponse):
+                    print(userResponse)
+                    let user = User.init(userId: Int(userResponse.user_id) ?? 0, name: userResponse.name, comment: userResponse.comment)
+                    completion(.success(user))
+                case .failure(let error):
+                    print("Error: \(error)")
+                    completion(.failure(error))
+                }
+            }
     }
 }

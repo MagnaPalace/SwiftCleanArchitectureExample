@@ -9,8 +9,8 @@ import Foundation
 
 // データ層とのインターフェースを提供するためのプロトコル
 protocol UserRepository {
-    func fetchUsers() async throws -> [User]
-    func addUser(userId: String, name: String, comment: String) async throws -> User
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void)
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 class UserRepositoryImpl: UserRepository {
@@ -20,12 +20,12 @@ class UserRepositoryImpl: UserRepository {
         self.dataStore = dataStore
     }
 
-    func fetchUsers() async throws -> [User] {
-        return try await dataStore.fetchUsers()
+    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
+        self.dataStore.fetchUsers(completion: completion)
     }
     
-    func addUser(userId: String, name: String, comment: String) async throws -> User {
-        return try await dataStore.addUser(userId: userId, name: name, comment: comment)
+    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {
+        self.dataStore.addUser(userId: userId, name: name, comment: comment, completion: completion)
     }
     
 }
