@@ -12,6 +12,7 @@ protocol UserListViewControllerInput: AnyObject {
     func startIndicator()
     func stopIndicator()
     func showFetchUsersApiFailedAlert()
+    func transitionToAddUserView()
 }
 
 class UserListViewController: UIViewController {
@@ -30,7 +31,10 @@ class UserListViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.setNavigationBar()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         // 開始時にユーザーの一覧取得
         self.presenter?.fetchUsers()
     }
@@ -46,15 +50,7 @@ class UserListViewController: UIViewController {
     }
     
     @objc func addBarButtonTapped(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard(name: "AddUserViewController", bundle: nil)
-        let addUserViewController = storyboard.instantiateViewController(withIdentifier: "AddUserViewController") as! AddUserViewController
-        let dataStore = UserDataStoreImpl()
-        let repository = UserRepositoryImpl(dataStore: dataStore)
-        let useCase = UserUseCaseImpl(repository: repository)
-        let presenter = AddUserPresenterImpl(useCase: useCase, viewController: addUserViewController)
-        
-        addUserViewController.inject(presenter: presenter)
-        navigationController?.pushViewController(addUserViewController, animated: true)
+        self.presenter?.addBarButtonTapped()
     }
 
 }
@@ -98,5 +94,17 @@ extension UserListViewController: UserListViewControllerInput {
             alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func transitionToAddUserView() {
+        let storyboard = UIStoryboard(name: "AddUserViewController", bundle: nil)
+        let addUserViewController = storyboard.instantiateViewController(withIdentifier: "AddUserViewController") as! AddUserViewController
+        let dataStore = UserDataStoreImpl()
+        let repository = UserRepositoryImpl(dataStore: dataStore)
+        let useCase = UserUseCaseImpl(repository: repository)
+        let presenter = AddUserPresenterImpl(useCase: useCase, viewController: addUserViewController)
+        
+        addUserViewController.inject(presenter: presenter)
+        navigationController?.pushViewController(addUserViewController, animated: true)
     }
 }

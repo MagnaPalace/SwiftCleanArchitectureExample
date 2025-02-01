@@ -10,6 +10,7 @@ import UIKit
 
 protocol UserListPresenter {
     func fetchUsers()
+    func addBarButtonTapped()
 }
 
 class UserListPresenterImpl: UserListPresenter {
@@ -37,6 +38,10 @@ class UserListPresenterImpl: UserListPresenter {
         }
         
         self.viewController?.stopIndicator()
+    }
+    
+    func addBarButtonTapped() {
+        self.viewController?.transitionToAddUserView()
     }
 
 }

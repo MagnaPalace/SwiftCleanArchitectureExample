@@ -58,25 +58,7 @@ class AddUserViewController: UIViewController {
     @objc func doneButtonTapped(_ sender: UIBarButtonItem) {
         userIdTextField.resignFirstResponder()
     }
-    
-    private func storeUserApiFailedAlert() {
-        let alert = UIAlertController(title: String.Localize.errorAlertTitle.text, message: String.Localize.networkCommunicationFailedMessage.text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    private func addUserFailedAlert() {
-        let alert = UIAlertController(title: String.Localize.errorAlertTitle.text, message: String.Localize.addUserFailedMessage.text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    private func notCompletedInputFieldAlert() {
-        let alert = UIAlertController(title: String.Localize.confirmAlertTitle.text, message: String.Localize.notCompletedInputFieldMessage.text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+
 }
 
 extension AddUserViewController: UITextFieldDelegate {
@@ -92,12 +74,13 @@ extension AddUserViewController: AddUserViewControllerInput {
         DispatchQueue.main.async{
             self.navigationController?.popViewController(animated: true)
         }
-//        self.delegate?.didEndAddUser()
     }
     
     func showAddUserApiFailedAlert() {
         DispatchQueue.main.async{
-            self.addUserFailedAlert()
+            let alert = UIAlertController(title: String.Localize.errorAlertTitle.text, message: String.Localize.addUserFailedMessage.text, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -111,7 +94,9 @@ extension AddUserViewController: AddUserViewControllerInput {
     
     func showNotCompletedInputFieldAlert() {
         DispatchQueue.main.async{
-            self.notCompletedInputFieldAlert()
+            let alert = UIAlertController(title: String.Localize.confirmAlertTitle.text, message: String.Localize.notCompletedInputFieldMessage.text, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }
