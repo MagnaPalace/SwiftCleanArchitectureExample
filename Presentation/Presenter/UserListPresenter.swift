@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol UserListPresenter {
-    func fetchUsers()
+    func getAllUsers()
     func addBarButtonTapped()
 }
 
@@ -25,10 +25,10 @@ class UserListPresenterImpl: UserListPresenter {
         self.viewController = viewController
     }
     
-    func fetchUsers() {
+    func getAllUsers() {
         self.viewController?.startIndicator()
 
-        self.useCase.fetchUsers { [weak self] result in
+        self.useCase.getAllUsers { [weak self] result in
             switch result {
             case .success(let users):
                 self?.viewController?.setTableView(users: users)

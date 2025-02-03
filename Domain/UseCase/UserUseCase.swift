@@ -9,7 +9,7 @@ import Foundation
 
 // アプリケーションのビジネスルールを表現するためのクラスや構造体
 protocol UserUseCase {
-    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void)
+    func getAllUsers(completion: @escaping (Result<[User], Error>) -> Void)
     func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
@@ -20,8 +20,8 @@ class UserUseCaseImpl: UserUseCase {
         self.repository = repository
     }
 
-    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
-        self.repository.fetchUsers(completion: completion)
+    func getAllUsers(completion: @escaping (Result<[User], Error>) -> Void) {
+        self.repository.getAllUsers(completion: completion)
     }
     
     func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {

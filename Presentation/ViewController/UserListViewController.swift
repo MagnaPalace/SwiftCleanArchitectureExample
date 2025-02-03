@@ -36,7 +36,7 @@ class UserListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 開始時にユーザーの一覧取得
-        self.presenter?.fetchUsers()
+        self.presenter?.getAllUsers()
     }
     
     func inject(presenter: UserListPresenter) {

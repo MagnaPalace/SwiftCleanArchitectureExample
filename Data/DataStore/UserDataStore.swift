@@ -9,13 +9,13 @@ import Foundation
 import Alamofire
 
 protocol UserDataStore {
-    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void)
-    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
+    func fetch(completion: @escaping (Result<[User], Error>) -> Void)
+    func add(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 class UserDataStoreImpl: UserDataStore {
     
-    func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
+    func fetch(completion: @escaping (Result<[User], Error>) -> Void) {
         let url = URL(string: BASE_URL + API_URL + UserApi.all.rawValue)!
         print("-----url-----\n\(url)")
         
@@ -35,7 +35,7 @@ class UserDataStoreImpl: UserDataStore {
             }
     }
 
-    func addUser(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {
+    func add(userId: String, name: String, comment: String, completion: @escaping (Result<User, Error>) -> Void) {
         let url = URL(string: BASE_URL + API_URL + UserApi.store.rawValue)!
         print("-----url-----\n\(url)")
         
