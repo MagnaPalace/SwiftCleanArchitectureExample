@@ -17,7 +17,7 @@ class IndicatorView {
     var grayOutView: UIView!
     
     func startIndicator() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             // xcode15以降のwindow取得方法
             let scenes = UIApplication.shared.connectedScenes
             let windowScenes = scenes.first as? UIWindowScene
@@ -42,7 +42,7 @@ class IndicatorView {
     }
     
     func stopIndicator() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             self.grayOutView.removeFromSuperview()
         }
     }

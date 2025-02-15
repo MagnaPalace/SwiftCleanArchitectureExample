@@ -42,7 +42,7 @@ class UserDataStoreImpl: UserDataStore {
         let parameter = [
             User.Key.userId.rawValue: userId,
             User.Key.name.rawValue: name,
-            User.Key.comment.rawValue: comment,
+            User.Key.comment.rawValue: comment
         ]
         print("-----parameter-----\n\(String(describing: parameter))")
         
@@ -53,7 +53,7 @@ class UserDataStoreImpl: UserDataStore {
                 switch response.result {
                 case .success(let userResponse):
                     print(userResponse)
-                    let user = User.init(userId: Int(userResponse.user_id) ?? 0, name: userResponse.name, comment: userResponse.comment)
+                    let user = User(userId: Int(userResponse.user_id) ?? 0, name: userResponse.name, comment: userResponse.comment)
                     completion(.success(user))
                 case .failure(let error):
                     print("Error: \(error)")

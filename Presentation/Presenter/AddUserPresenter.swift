@@ -22,7 +22,7 @@ class AddUserPresenterImpl: AddUserPresenter {
     }
     
     func addUserButtonTapped(userId: String, name: String, comment: String) {
-        guard userId.count > 0, name.count > 0, comment.count > 0 else {
+        guard userId.isEmpty, name.isEmpty, comment.isEmpty else {
             self.viewController?.showNotCompletedInputFieldAlert()
             return
         }
@@ -30,9 +30,9 @@ class AddUserPresenterImpl: AddUserPresenter {
         
         self.useCase.addUser(userId: userId, name: name, comment: comment) { [weak self] result in
             switch result {
-            case .success(let user):
+            case .success:
                 self?.viewController?.returnToUserListView()
-            case .failure(let error):
+            case .failure:
                 self?.viewController?.showAddUserApiFailedAlert()
             }
         }

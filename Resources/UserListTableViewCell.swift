@@ -9,9 +9,9 @@ import UIKit
 
 class UserListTableViewCell: UITableViewCell {
 
-    @IBOutlet var userIdLabel: UILabel!
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var commentLabel: UILabel!
+    @IBOutlet private var userIdLabel: UILabel!
+    @IBOutlet private var nameLabel: UILabel!
+    @IBOutlet private var commentLabel: UILabel!
     
     var model: UserListTableViewCellModel!
     

@@ -17,9 +17,9 @@ protocol AddUserViewControllerInput: AnyObject {
 
 class AddUserViewController: UIViewController {
 
-    @IBOutlet var userIdTextField: UITextField!
-    @IBOutlet var nameTextField: UITextField!
-    @IBOutlet var commentTextField: UITextField!
+    @IBOutlet private var userIdTextField: UITextField!
+    @IBOutlet private var nameTextField: UITextField!
+    @IBOutlet private var commentTextField: UITextField!
  
     var presenter: AddUserPresenter?
     
@@ -40,7 +40,7 @@ class AddUserViewController: UIViewController {
         self.presenter = presenter
     }
 
-    @IBAction func addUserButtonTapped(_ sender: Any) {
+    @IBAction private func addUserButtonTapped(_ sender: Any) {
         self.presenter?.addUserButtonTapped(userId: userIdTextField.text ?? "", name: nameTextField.text ?? "", comment: commentTextField.text ?? "")
     }
     
@@ -71,13 +71,13 @@ extension AddUserViewController: UITextFieldDelegate {
 
 extension AddUserViewController: AddUserViewControllerInput {
     func returnToUserListView() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             self.navigationController?.popViewController(animated: true)
         }
     }
     
     func showAddUserApiFailedAlert() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             let alert = UIAlertController(title: String.Localize.errorAlertTitle.text, message: String.Localize.addUserFailedMessage.text, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -93,7 +93,7 @@ extension AddUserViewController: AddUserViewControllerInput {
     }
     
     func showNotCompletedInputFieldAlert() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             let alert = UIAlertController(title: String.Localize.confirmAlertTitle.text, message: String.Localize.notCompletedInputFieldMessage.text, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)

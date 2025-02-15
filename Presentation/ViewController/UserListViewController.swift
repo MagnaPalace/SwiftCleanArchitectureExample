@@ -17,7 +17,7 @@ protocol UserListViewControllerInput: AnyObject {
 
 class UserListViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     
     var presenter: UserListPresenter?
     
@@ -89,7 +89,7 @@ extension UserListViewController: UserListViewControllerInput {
     }
     
     func showFetchUsersApiFailedAlert() {
-        DispatchQueue.main.async{
+        DispatchQueue.main.async {
             let alert = UIAlertController(title: String.Localize.errorAlertTitle.text, message: String.Localize.networkCommunicationFailedMessage.text, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String.Localize.closeAlertButtonTitle.text, style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)

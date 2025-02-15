@@ -32,7 +32,7 @@ class UserListPresenterImpl: UserListPresenter {
             switch result {
             case .success(let users):
                 self?.viewController?.setTableView(users: users)
-            case .failure(let error):
+            case .failure:
                 self?.viewController?.showFetchUsersApiFailedAlert()
             }
         }
